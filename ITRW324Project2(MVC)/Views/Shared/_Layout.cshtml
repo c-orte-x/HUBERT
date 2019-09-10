@@ -1,0 +1,174 @@
+﻿<!DOCTYPE html>
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+
+
+        .popup {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+            .popup .popuptext {
+                visibility: hidden;
+                width: 160px;
+                background-color: #555;
+                color: #fff;
+                text-align: center;
+                border-radius: 6px;
+                padding: 8px 0;
+                position: absolute;
+                z-index: 1;
+                bottom: 125%;
+                left: 50%;
+                margin-left: -80px;
+            }
+
+                .popup .popuptext::after {
+                    content: "";
+                    position: absolute;
+                    top: 100%;
+                    left: 50%;
+                    margin-left: -5px;
+                    border-width: 5px;
+                    border-style: solid;
+                    border-color: #555 transparent transparent transparent;
+                }
+
+            .popup .show {
+                visibility: visible;
+                -webkit-animation: ease-in 1s;
+                animation: ease-in 1s;
+            }
+    </style>
+    <title>@ViewData["Title"] - MSC Bookings</title>
+
+    <environment include="Development">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="~/css/site.css" />
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute"
+              crossorigin="anonymous"
+              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" />
+        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+    </environment>
+</head>
+
+<body>
+
+    <div id="wrapper">
+        <nav class="navbar navbar-default navbar-fixed-top">
+            <partial name="_LoginPartial" />
+
+            <div class="container">
+
+                <div class="navbar-header">
+
+                    <button type="button" class="navbar-toggle" style="float: left; margin-left: 15px" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">MSC Bookings</a>
+
+                </div>
+
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        @if (SignInManager.IsSignedIn(User)) //If user is signed in then bookings can be made
+                        {
+                            <li><a asp-area="" asp-controller="Home" asp-action="Booking">Make Bookings</a></li>
+                        }
+                        <li><a asp-area="" asp-controller="Home" asp-action="ViewBooking">View Booking Times</a></li>
+                        <li>
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <a asp-area="" asp-controller="Admin" asp-action="Index">Admin Page</a>
+                                }
+                            }
+                        </li>
+                    </ul>
+                </div>
+
+
+            </div>
+
+        </nav>
+
+        <partial name="_CookieConsentPartial" />
+        <script>
+            function popFunction() {
+                var popup = document.getElementById("myPopup");
+                popup.classList.toggle("show");
+            }
+        </script>
+
+        @RenderBody()
+        <footer style="text-align: center">
+            <p>&copy; 2019 - Mittal Squash Club</p>
+            <div>
+                <a style="padding-right: 60px; position: relative; color: black" asp-area="" asp-controller="Home" asp-action="AboutUs">About Us</a>
+                <a style="padding-right: 60px; position: relative; color: black" asp-area="" asp-controller="Home" asp-action="ContactUs">Contact Us</a>
+                <a style="padding-right: 60px; position: relative; color: black" asp-controller="Home" asp-action="Rates">Rates</a>
+                <a style="padding-right: 60px; position: relative; color: black" asp-controller="Home" asp-action="Rules">Rules</a>
+
+
+            </div>
+            @*
+                @if (log == 50)
+                {
+                        <a style="position: relative" asp-area="" asp-controller="Home" asp-action="Booking">Profile</a>
+                }
+                else
+                {
+                        <a style="position: relative" class="popup" onclick="popFunction()">
+                            Profile<span class="popuptext" id="myPopup">Please log in first</span>
+                        </a>
+                }
+            *@
+
+
+        </footer>
+
+
+    </div>
+    <environment include="Development">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"
+                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+                asp-fallback-test="window.jQuery"
+                crossorigin="anonymous"
+                integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=">
+        </script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"
+                asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"
+                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
+                crossorigin="anonymous"
+                integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o">
+        </script>
+    </environment>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
